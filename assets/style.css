@@ -15,3 +15,6 @@ aside {
     font-style: italic;
     color: #29627e;
 }
+p{
+    overflow-wrap: break-word;
+}

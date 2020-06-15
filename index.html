@@ -18,11 +18,13 @@
     <h1 span class="#0277bd light-blue darken-3 white-text">Wether the Weather!</h1>
     <aside>
         <h3>Search Cities</h3>
-        <div class="input-field">
-            <input id="search" type="search" required>
-            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-            <!-- <i class="material-icons">close</i> -->
-        </div>
+        <form>
+            <div class="input-field">
+              <input id="citySearch" type="search" required>
+              <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+              <button id="search">Search</button>
+            </div>
+          </form>
     </aside>
 
     <!--Mess with width for proper view-->
@@ -35,9 +37,7 @@
                     <span class="card-title blue-grey-text text-darken-3"><strong>Today's Weather</strong></span>
                 </div>
                 <div class="card-content">
-                    <p>Change to UL maybe? List out the current weather info:
-                        temp, humidity, wind speed, UV index
-                    </p>
+                    <ul id="todayWeather"></ul>
                 </div>
             </div>
         </div>
@@ -49,6 +49,7 @@
         </h1>
     </div>
     <div class="row">
+        <!--add text wrapping or flow text-->
         <div class="col s12 m2 offset-m1">
             <div class="card-panel blue-grey darken-1">
                 <div class="card-content white-text">
@@ -93,11 +94,13 @@
     </div>
 
 
-    <!--Materialize CSS, Moment.JS, local JS-->
-    <!-- Compiled and minified JavaScript -->
+    <!--Materialize CSS--> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!--Moment.JS--> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <!--local JS-->
     <script src="assets/script.js"></script>
 
 </body>
