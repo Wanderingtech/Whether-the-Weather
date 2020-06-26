@@ -1,9 +1,14 @@
 var savedCities = [];
 var userCity;
 var APIKey = "efd4aeef590f4c9e7f336687419f306c";
+initialize()
 
 function initialize(){
-    savedCities = JSON.parse(localStorage).getItem("cities")
+    savedCities = JSON.parse(localStorage.getItem("cities"))||[]
+    $("#savedCities").empty();
+    for(let i = 0; i< savedCities.length; i++){
+        $("#savedCities").append(`<p>${savedCities[i]}</p>`)
+    }
 }
 //activate search for the API
 $("#search").on("click", function(event) {
@@ -14,7 +19,7 @@ $("#search").on("click", function(event) {
     console.log(userCity);
     //add city to array
     // var savedCities = $()
-    
+    $("#citySearch").val("");
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + userCity + "&appid=" + APIKey;
     fiveDayForecast(userCity)
     $.ajax({
@@ -36,8 +41,9 @@ $("#search").on("click", function(event) {
             $('#todayWeather').append('Wind Speed: ' + response.wind.speed + ' mph');
             $("#todayWeather").append(`<li><img src="http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png"/></li>`);
             //Saving search to local storage
+            savedCities.push(userCity);
             localStorage.setItem("cities", JSON.stringify(savedCities))
-
+            initialize();
         });
     
 
@@ -79,6 +85,9 @@ function fiveDayForecast(userCity){
         </div>`)
         }
     })
+}
+function displayCities(){
+    var cities = localStorage.getItem(userCity)
 }
 //grab specific data from weather API (using specific time around 3pm)
 //Display that info in cards
