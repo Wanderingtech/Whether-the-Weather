@@ -1,15 +1,28 @@
 var savedCities = [];
 var userCity;
 var APIKey = "efd4aeef590f4c9e7f336687419f306c";
-initialize()
+initialize();
+currentDay();
+
 
 function initialize(){
     savedCities = JSON.parse(localStorage.getItem("cities"))||[]
+    
     $("#savedCities").empty();
     for(let i = 0; i< savedCities.length; i++){
-        $("#savedCities").append(`<p>${savedCities[i]}</p>`)
+        $("#savedCities").append(`<p>${savedCities[i]}</p>
+        <a class="waves-effect waves-light btn-small" id="clear">Clear</a>`);
+        // if()
     }
 }
+
+function currentDay(){
+    $("#today").text(moment().format("dddd MMM Do YYYY"));
+}
+
+$("#clear").on("click", function(){
+    $(this).html("");
+})
 //activate search for the API
 $("#search").on("click", function(event) {
 
@@ -17,8 +30,6 @@ $("#search").on("click", function(event) {
 
     var userCity = $("#citySearch").val();
     console.log(userCity);
-    //add city to array
-    // var savedCities = $()
     $("#citySearch").val("");
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + userCity + "&appid=" + APIKey;
     fiveDayForecast(userCity)
@@ -28,17 +39,15 @@ $("#search").on("click", function(event) {
     })
         .then(function(response) {
             console.log(response);
-            // Convert the temp to fahrenheit
             var lat = response.coord.lat
             var lon = response.coord.lon
             getUV(lat,lon);
-
+            // Convert the temp to fahrenheit
             var tempF = (response.main.temp - 273.15) * 1.80 + 32;
-            // $('#todayWeather').append('<li> Temperature (K): ' + response.main.temp + '</li>');
-            $('#todayWeather').html(`<h1>${userCity}</h1>`);
+            $('#todayWeatherH').html(userCity);
             $('#todayWeather').append('<li> Temperature: ' + tempF.toFixed(2) + '  °F </li>');
             $('#todayWeather').append('<li> Humidity: ' + response.main.humidity + '%</li>');
-            $('#todayWeather').append('Wind Speed: ' + response.wind.speed + ' mph');
+            $('#todayWeather').append('<li> Wind Speed: ' + response.wind.speed + ' mph </li>');
             $("#todayWeather").append(`<li><img src="http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png"/></li>`);
             //Saving search to local storage
             savedCities.push(userCity);
@@ -68,6 +77,7 @@ function fiveDayForecast(userCity){
         method: "GET"
     }).then (function(forecast){
         console.log(forecast);
+        var tempF = (response.main.temp - 273.15) * 1.80 + 32;
         $("#fiveDay").empty();
         for(let i = 0; i< forecast.list.length; i= i +8){
             $("#fiveDay").append(` <div class="col s12 m2 offset-m1">
@@ -75,7 +85,7 @@ function fiveDayForecast(userCity){
                 <div class="card-content white-text">
                     <span class="card-title" id="Day-1">${forecast.list[i].dt_txt.split(" ")[0]}</span>
                     <ul>
-                        <li>${forecast.list[i].main.temp}</li>
+                        <li>${forecast.list[i].tempF.toFixed(2) + '  °F'}</li>
                         <li>${forecast.list[i].main.humidity}</li>
                         <li>${forecast.list[i].weather[0].main}</li>
                         <li><img src="http://openweathermap.org/img/wn/${forecast.list[0].weather[0].icon}@2x.png"/></li>
