@@ -46,7 +46,7 @@ function currentForecast(userCity){
             var lat = response.coord.lat
             var lon = response.coord.lon
             getUV(lat,lon);
-            $('#todayWeather').html(userCity);
+            $('#weatherHeading').append('<h1>' + userCity + '</h1>');
             $('#todayWeather').append('<li> Temperature: ' + response.main.temp + '  °F </li>');
             $('#todayWeather').append('<li> Humidity: ' + response.main.humidity + '%</li>');
             $('#todayWeather').append('<li> Wind Speed: ' + response.wind.speed + ' mph </li>');
@@ -110,13 +110,13 @@ function fiveDayForecast(userCity){
         
         $("#fiveDay").empty();
         for(let i = 0; i< forecast.list.length; i= i +8){
-            $("#fiveDay").append(` <div class="col s12 m2 offset-m1">
+            $("#fiveDay").append(` <div class="col s12 m3 offset-m2">
             <div class="card-panel blue-grey darken-1">
                 <div class="card-content white-text">
                     <span class="card-title" id="Day-1">${forecast.list[i].dt_txt.split(" ")[0]}</span>
                     <ul>
-                        <li>${forecast.list[i].main.temp + '  °F'}</li>
-                        <li>${forecast.list[i].main.humidity}</li>
+                        <li>Temp: ${forecast.list[i].main.temp + '  °F'}</li>
+                        <li>Humidity: ${forecast.list[i].main.humidity} % </li>
                         <li>${forecast.list[i].weather[0].main}</li>
                         <li><img src="http://openweathermap.org/img/wn/${forecast.list[0].weather[0].icon}@2x.png"/></li>
                     </ul>
