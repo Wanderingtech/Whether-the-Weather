@@ -10,27 +10,31 @@ function initialize(){
     
     $("#savedCities").empty();
     for(let i = 0; i< savedCities.length; i++){
-        $("#savedCities").append(`<p>${savedCities[i]}</p>
-        <a class="waves-effect waves-light btn-small" id="clear">Clear</a>`);
-        // if()
+        $("#savedCities").append(`<p class= "cityList">${savedCities[i]}</p>
+        <button data-city="${savedCities[i]}"class="clearButton waves-effect waves-light btn-small">Clear</button>`);
     }
 }
-
+$("#savedCities").on("click", ".cityList", function(){
+    var city = $(this).text();
+    currentForecast(city);
+})
 function currentDay(){
     $("#today").text(moment().format("dddd MMM Do YYYY"));
 }
 
-// $("#clear").on("click", function(){
-//     $("savedCities").this.(`"<p>"${this}"</p>"`.empty);
-// })
-//activate search for the API
-$("#search").on("click", function(event) {
-
-    event.preventDefault();
-
-    var userCity = $("#citySearch").val();
-    console.log(userCity);
-    $("#citySearch").val("");
+$("#savedCities").on("click",".clearButton", function(){
+    var previousCities = savedCities
+    var newList = []
+    var currentCity = $(this).attr("data-city")
+    for(let i = 0; i< previousCities.length; i++){
+        if(previousCities[i] !== currentCity){
+            newList.push(previousCities[i])
+        }
+    }
+    localStorage.setItem("cities", JSON.stringify(newList))
+    initialize()
+})
+function currentForecast(userCity){
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + userCity + "&appid=" + APIKey + "&units=imperial"
     fiveDayForecast(userCity)
     $.ajax({
@@ -42,16 +46,29 @@ $("#search").on("click", function(event) {
             var lat = response.coord.lat
             var lon = response.coord.lon
             getUV(lat,lon);
-            $('#todayWeatherH').html(userCity);
+            $('#todayWeather').html(userCity);
             $('#todayWeather').append('<li> Temperature: ' + response.main.temp + '  °F </li>');
             $('#todayWeather').append('<li> Humidity: ' + response.main.humidity + '%</li>');
             $('#todayWeather').append('<li> Wind Speed: ' + response.wind.speed + ' mph </li>');
             $("#todayWeather").append(`<li><img src="http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png"/></li>`);
             //Saving search to local storage
-            savedCities.push(userCity);
-            localStorage.setItem("cities", JSON.stringify(savedCities))
-            initialize();
+            if(savedCities.indexOf(userCity)=== -1){
+                savedCities.push(userCity);
+                localStorage.setItem("cities", JSON.stringify(savedCities))
+                initialize();
+            }
+          
         });
+}
+//activate search for the API
+$("#search").on("click", function(event) {
+
+    event.preventDefault();
+
+    var userCity = $("#citySearch").val();
+    console.log(userCity);
+    $("#citySearch").val("");
+    currentForecast(userCity);
     
 
 });
