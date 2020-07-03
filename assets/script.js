@@ -81,7 +81,22 @@ function getUV(lat, lon){
         method: "GET"
     }).then (function(uvResponse){
         console.log(uvResponse);
-        $("#UV").append(uvResponse.value);
+        $("#UV").append("UV Index: " + uvResponse.value); 
+        if(uvResponse.value > 11){
+        $("#UV").addClass("violet");
+        }
+        if(uvResponse.value < 11 && uvResponse.value >= 8){
+            $("#UV").addClass("red")
+        }
+        if(uvResponse.value < 8 && uvResponse.value >= 6){
+            $("#UV").addClass("orange")
+        }
+        if(uvResponse.value < 6 && uvResponse.value >= 3){
+            $("#UV").addClass("yellow")
+        }
+        else{
+            $("#UV").addClass("green")
+        }
     })
 
 }
@@ -114,8 +129,3 @@ function fiveDayForecast(userCity){
 function displayCities(){
     var cities = localStorage.getItem(userCity)
 }
-//grab specific data from weather API (using specific time around 3pm)
-//Display that info in cards
-//get current day display in first card
-//get next 5 days and display in the other 5 cards
-//Save the history of search and display on page
