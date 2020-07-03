@@ -20,9 +20,9 @@ function currentDay(){
     $("#today").text(moment().format("dddd MMM Do YYYY"));
 }
 
-$("#clear").on("click", function(){
-    $(this).html("");
-})
+// $("#clear").on("click", function(){
+//     $("savedCities").this.(`"<p>"${this}"</p>"`.empty);
+// })
 //activate search for the API
 $("#search").on("click", function(event) {
 
@@ -31,7 +31,7 @@ $("#search").on("click", function(event) {
     var userCity = $("#citySearch").val();
     console.log(userCity);
     $("#citySearch").val("");
-    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + userCity + "&appid=" + APIKey;
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + userCity + "&appid=" + APIKey + "&units=imperial"
     fiveDayForecast(userCity)
     $.ajax({
         url: queryURL,
@@ -42,10 +42,8 @@ $("#search").on("click", function(event) {
             var lat = response.coord.lat
             var lon = response.coord.lon
             getUV(lat,lon);
-            // Convert the temp to fahrenheit
-            var tempF = (response.main.temp - 273.15) * 1.80 + 32;
             $('#todayWeatherH').html(userCity);
-            $('#todayWeather').append('<li> Temperature: ' + tempF.toFixed(2) + '  °F </li>');
+            $('#todayWeather').append('<li> Temperature: ' + response.main.temp + '  °F </li>');
             $('#todayWeather').append('<li> Humidity: ' + response.main.humidity + '%</li>');
             $('#todayWeather').append('<li> Wind Speed: ' + response.wind.speed + ' mph </li>');
             $("#todayWeather").append(`<li><img src="http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png"/></li>`);
@@ -71,13 +69,13 @@ function getUV(lat, lon){
 
 }
 function fiveDayForecast(userCity){
-    var uvQuery = "https://api.openweathermap.org/data/2.5/forecast?q=" + userCity + "&appid=" + APIKey
+    var uvQuery = "https://api.openweathermap.org/data/2.5/forecast?q=" + userCity + "&appid=" + APIKey + "&units=imperial"
     $.ajax({
         url: uvQuery,
         method: "GET"
     }).then (function(forecast){
         console.log(forecast);
-        var tempF = (response.main.temp - 273.15) * 1.80 + 32;
+        
         $("#fiveDay").empty();
         for(let i = 0; i< forecast.list.length; i= i +8){
             $("#fiveDay").append(` <div class="col s12 m2 offset-m1">
@@ -85,7 +83,7 @@ function fiveDayForecast(userCity){
                 <div class="card-content white-text">
                     <span class="card-title" id="Day-1">${forecast.list[i].dt_txt.split(" ")[0]}</span>
                     <ul>
-                        <li>${forecast.list[i].tempF.toFixed(2) + '  °F'}</li>
+                        <li>${forecast.list[i].main.temp + '  °F'}</li>
                         <li>${forecast.list[i].main.humidity}</li>
                         <li>${forecast.list[i].weather[0].main}</li>
                         <li><img src="http://openweathermap.org/img/wn/${forecast.list[0].weather[0].icon}@2x.png"/></li>
